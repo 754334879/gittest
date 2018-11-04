@@ -369,6 +369,30 @@ Branch 'dev' set up to track remote branch 'dev' from 'origin'.
 现在可以在dev上继续修改，然后，随时把dev分支push到远程。
 
 
+当推送失败时，有可能是存在冲突。解决办法很简单，先用git pull把最新的提交从origin/dev抓下来，然后在本地合并，解决冲突，再推送：
+$ git pull
+
+
+如果pull失败了，原因是没有指定本地dev分支与远程origin/dev分支的链接，可以使用下面命令设置dev和origin/dev的链接（使用上面“抓取分支”的命令也可以）：
+$ git branch --set-upstream-to=origin/dev dev
+Branch 'dev' set up to track remote branch 'dev' from 'origin'.
+
+所以，多人协作的工作模式通常是：
+首先，可以视图用git push origin <branch-name>推送自己的修改
+如果推送失败，则因为远程分支比本地的更新，需要先用git pull进行合并；
+如果合并有冲突，则解决冲突，并在本地提交；
+如果没冲突，或解决了冲突，再用git push origin <branch-name>推送就能成功
+
+如果git pull提示no tracking information，则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream-to=origin/dev dev
+
+总结：
+查看远程库信息：git remote -v
+本地新建分支如果不推送到远程，对其他人就是不可见的
+从本地推送分支，使用git push origin <branch-name>；如果推送失败，先用git pull抓取远程的新提交
+在本地创建和远程分支对应的分支，使用git checkout -b branch-name orign/branch-name,本地和远程分支名称最好一致；
+建立本地分支和远程分支的管理，使用git branch --set-upstream <branch-name> origin/<branch-name>
+从远程抓取分支，使用git pull，如果有冲突，先处理冲突。
+
 
 
 
